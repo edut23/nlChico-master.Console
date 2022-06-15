@@ -239,7 +239,7 @@ export const FormContent = styled.div`
   align-items: center;
   padding-left: 23%;
   padding-right: 10%;
-
+  z-index: 10;
   width: 90%;
   heigth: 65%;
 
@@ -277,7 +277,7 @@ export const ButtonsDiv = styled.div`
 `
 
 export const TipButton = styled.div`
-  z-index: 9999;
+  z-index: 5;
   background-image: url(${dica});
   background-size: contain;
   background-repeat: no-repeat;
@@ -295,7 +295,7 @@ export const TipButton = styled.div`
 `;
 
 export const SkipButton = styled.div`
-  z-index: 999;
+  z-index: 5;
   //transition: color 0.4s ease 0s;
   background-image: url(${pular});
   background-size: contain;
@@ -378,7 +378,7 @@ export const RankContainer = styled.div`
 
   > p {
     margin-top: 33%;
-    font-size: 27px;
+    font-size: 22px;
   }
 
   background-image: url(${ranking});
@@ -388,8 +388,8 @@ export const RankContainer = styled.div`
 
   //width: 60%;
   //heigth: 65%;
-  margin-left: -20%;
-  margin-right: 20%;
+  margin-left: -10%;
+  margin-right: 10%;
 
 `;
 

@@ -7,7 +7,7 @@ interface ItemProps {
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 33%;
   margin-left: -3%;
 
   color: #000;
@@ -35,7 +35,7 @@ export const Content = styled.div`
 `;
 
 export const Header = styled.div`
-  width: 100%;
+  width: 25%;
   margin-top: 2%;
   margin-left: 13%;
 
@@ -49,19 +49,21 @@ export const Header = styled.div`
 export const Title = styled.h1`
   font-family: 'Kumbh Sans';
   font-weight: 600;
+  font-size: 20px;
 
   @media (max-width: 700px) {
-    font-size: 16px;
+    font-size: 12px;
   }
 `;
 
 export const Body = styled.div`
   width: 20%;
-  height: 100%;
+  max-height: 30px;
+  margin-right: -10%;
 
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  //border-radius: 12px;
 
   padding: 8px;
 `;
@@ -69,14 +71,14 @@ export const Body = styled.div`
 export const Item = styled.div<ItemProps>`
   width: 100%;
   height: 12%;
-  margin-left: 28%;
+  margin-left: 13%;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   margin-right: auto;
-  padding: 8px;
+  //padding: 8px;
 
   & + div {
     margin-top: 10px;
@@ -91,6 +93,7 @@ export const Item = styled.div<ItemProps>`
 
   h3 {
     margin-right: auto;
+    font-size: 17px;
 
     ${(props) =>
     props.myTeam &&

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useAuth } from '../../hooks/auth';
+import { useTeam } from '../../hooks/team';
 
 import {
   Container,
@@ -17,14 +18,18 @@ interface RankingProps {
 }
 
 interface Ranking {
-  TeamCurrentQuestionId?: string;
-  TeamId?: string;
-  TeamName: string;
-  TeamPoints: number;
+  category: string;
+  currentquestionid?: string;
+  founder: string;
+  imageurl: string;
+  name: string;
+  points: number;
+  teamid?: string;
 }
 
 const Ranking: React.FC<RankingProps> = ({ children, content }) => {
   const { user } = useAuth();
+  const { team } = useTeam();
 
   const [list, setList] = useState<Ranking[]>([]);
 
@@ -41,33 +46,34 @@ const Ranking: React.FC<RankingProps> = ({ children, content }) => {
           <Title>Ranking</Title>
         </Header>
         <Body>
-          {/*list.map((item, index) => (
+          {list.slice(0, 4).map((item, index) => (
             <Item
-              myTeam={user.teamid === item.TeamName && true}
-              key={item.TeamName}
+              myTeam={user.teamid === item.teamid && true}
+              key={item.teamid}
             >
               <QuestionPoints>
-                <h3>{`${index + 1}° - ${item.TeamName}`}</h3>
-                {item.TeamCurrentQuestionId === '111' && (
+                <h3>{`${index + 1}° - ${item.name}`}</h3>
+                {item.currentquestionid === '111' && (
                   <strong>Finalizado</strong>
                 )}
-                {item.TeamCurrentQuestionId !== '111' && (
-                  <strong>{`Questão ${item.TeamCurrentQuestionId}`}</strong>
+                {item.currentquestionid !== '111' && (
+                  <strong>{`Questão ${item.currentquestionid}`}</strong>
                 )}
               </QuestionPoints>
-              {user.teamid === item.TeamName && (
-                <p>{`${item.TeamPoints} pts`}</p>
+              {user.teamid === item.teamid && (
+                <p>{`${item.points} pts`}</p>
               )}
             </Item>
-              ))*/}
-            <Item myTeam={/*user.teamid === item.TeamName && true*/true}
-              key={/*item.TeamName*/ "foi"}>
-              <QuestionPoints>
-                <h3>1º - Equipe Teste</h3>
-                <strong>Finalizado</strong>
-              </QuestionPoints>
-              <p>{`180 pts`}</p>
-            </Item>
+              ))}
+            {//*<Item myTeam={/*user.teamid === item.TeamName && true*///true}
+              //key={/*item.TeamName*/ "foi"}>
+              //<QuestionPoints>
+                //<h3>1º - Equipe Teste</h3>
+               // <strong>Finalizado</strong>
+             // </QuestionPoints>
+             //</Body> <p>{`180 pts`}</p>
+            //</Content></Item>
+          }
         </Body>
       </Content>
     </Container>

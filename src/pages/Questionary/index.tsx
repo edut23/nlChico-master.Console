@@ -69,13 +69,13 @@ interface Question {
   url: string;
 }
 
-interface NextQuestion {
-  nextQuestion: Question;
+interface nextquestion {
+  nextquestion: Question;
 }
 
 interface AnswerQuestion {
-  isCorrect: boolean;
-  nextQuestion: Question;
+  iscorrect: boolean;
+  nextquestion: Question;
 }
 
 interface DataFormInfo {
@@ -100,12 +100,13 @@ const Questionary: React.FC = () => {
   const [wsResponse, setWsResponse] = useState('');
 
 
-  const ENDPOINT_WS =
+  /*const ENDPOINT_WS =
     team.category === 'Fundamental'
       ? (process.env.REACT_APP_FUND_WS as string)
-      : (process.env.REACT_APP_PROD_WS as string);
+      : (process.env.REACT_APP_PROD_WS as string);*/
 
   const ENDPOINT = `https://j1hjd787mc.execute-api.sa-east-1.amazonaws.com/prod`;
+  const ENDPOINT_WS = `wss://admv564mu8.execute-api.sa-east-1.amazonaws.com/prod`;
 
   /*const ENDPOINT =
     team.category === 'Fundamental'
@@ -127,22 +128,39 @@ const Questionary: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const sWs = useRef<WebSocket>();
 
+  const ping = useCallback(async () => {
+    await sWs.current?.send(
+      JSON.stringify({
+        action: 'onMessage',
+        teamcategory: team.category,
+        type: 'ping',
+        userid: user.userid,
+        teamid: user.teamid,
+      }),
+    );
+  }, []);
+
   const getRanking = useCallback(() => {
     sWs.current?.send(
       JSON.stringify({
         action: 'onMessage',
+        teamcategory: team.category,
         type: 'ranking',
+        userid: user.userid,
+        teamid: user.teamid,
       }),
     );
+    console.log(sWs);
   }, [sWs]);
 
   const sendId = useCallback(() => {
     sWs.current?.send(
       JSON.stringify({
         action: 'onMessage',
+        teamcategory: team.category,
         type: 'updateconnectionid',
-        userId: user.userid,
-        teamId: user.teamid,
+        userid: user.userid,
+        teamid: user.teamid,
       }),
     );
   }, [user.userid, user.teamid]);
@@ -159,14 +177,7 @@ const Questionary: React.FC = () => {
     console.log('terminou a função ping');
   }, []);
 
-  /*const ping = useCallback(async () => {
-    await sWs.current?.send(
-      JSON.stringify({
-        action: 'onMessage',
-        type: 'ping',
-      }),
-    );
-  }, []);*/
+
 
   // const sendMessage = useCallback(
   //   (userName: string, teamId: string, message: string) => {
@@ -202,6 +213,7 @@ const Questionary: React.FC = () => {
       setCaracterCounter(
         parseInt(response.data.answercharactercounter, 10),
       );
+      console.log("puxo3");
     });
   }, [ENDPOINT, push, user.userid, user.teamid]);
 
@@ -209,14 +221,16 @@ const Questionary: React.FC = () => {
     sWs.current = new WebSocket(ENDPOINT_WS);
     sWs.current.onopen = (event) => {
       sendId();
-      /*setInterval(() => {
+      console.log("puxo4");
+      setInterval(() => {
         if (sWs !== undefined) {
           ping();
         }
-      }, 30000);*/
+      }, 30000);
 
       if (sWs.current !== undefined) {
         getRanking();
+        console.log("puxo5");
         if (sWs !== undefined) {
           sWs.current.onerror = (err) => {
             // sWs.current?.close();
@@ -231,7 +245,7 @@ const Questionary: React.FC = () => {
               setVerifyPing(e.data);
             }
 
-            if (e.data.includes('TeamPoints')) {
+            if (e.data.includes('points')) {
               setWsResponse(e.data);
             }
             if (e.data === 'updatecurrentquestion') {
@@ -246,6 +260,7 @@ const Questionary: React.FC = () => {
             if (e.data.includes('message')) {
               const recievedMessage: Message = JSON.parse(e.data);
               addMessage(recievedMessage.message, recievedMessage.userName);
+              console.log(e.data);
             }
             if (e.data.includes('refreshranking')) {
               console.log('refresh foi chamado');
@@ -268,6 +283,7 @@ const Questionary: React.FC = () => {
     };
 
     getCurrentQuestionByTeamId();
+    console.log("puxo6");
 
     return () => {
       sWs.current?.close();
@@ -279,7 +295,7 @@ const Questionary: React.FC = () => {
     clearMessages,
     getCurrentQuestionByTeamId,
     getRanking,
-    //ping,
+    ping,
     reOpenConnection,
     sWs,
     sendId,
@@ -301,16 +317,16 @@ const Questionary: React.FC = () => {
 
   const handlePassQuestion = useCallback(() => {
     setConfirm(!confirm);
-    Axios.get<NextQuestion>(
-      `${ENDPOINT}/question/official/pass?questionid=${question.questionid}&teamId=${user.teamid}&userId=${user.userid}`,
+    Axios.get<nextquestion>(
+      `${ENDPOINT}/question/official/pass?questionid=${question.questionid}&teamid=${user.teamid}&userid=${user.userid}`,
     ).then((response) => {
       try {
         setCaracterCounter(999);
         setRememberAnswer('');
-        if (response.data.nextQuestion.questionid) {
+        if (response.data.nextquestion.questionid) {
           setIsPassing(false);
           setConfirm(!confirm);
-          setQuestion(response.data.nextQuestion);
+          setQuestion(response.data.nextquestion);
           sWs.current?.send(
             JSON.stringify({
               action: 'onMessage',
@@ -349,25 +365,27 @@ const Questionary: React.FC = () => {
 
         setIsAnswering(true);
 
-        Axios.post<AnswerQuestion>(`${ENDPOINT}/answerquestion`, {
-          UserId: user.userid,
-          TeamId: user.teamid,
-          QuestionId: question.questionid,
-          QuestionAnswer: data.answer,
+        Axios.post<AnswerQuestion>(`${ENDPOINT}/question/official/answer`, {
+          userid: user.userid,
+          teamid: user.teamid,
+          questionid: question.questionid,
+          questionanswer: data.answer,
         }).then((response) => {
-          if (response.data.isCorrect) {
+          if (response.data.iscorrect) {
             setCaracterCounter(999);
             setRememberAnswer('');
+            console.log(response.data);
 
             formRef.current?.clearField('answer');
-            setQuestion(response.data.nextQuestion);
+            setQuestion(response.data.nextquestion);
+            
 
             sWs.current?.send(
               JSON.stringify({
                 action: 'onMessage',
                 type: 'updatecurrentquestion',
-                userId: user.userid,
-                teamId: user.teamid,
+                userid: user.userid,
+                teamid: user.teamid,
               }),
             );
             sWs.current?.send(
@@ -469,16 +487,6 @@ const Questionary: React.FC = () => {
               <QuestionOverlay>
                 <Question>
                   <QuestionHeader normal={question.type === 'normal'}>
-                    {question.hint !== ' ' && !passing && (
-                      <HintButton onClick={handleShowHint}>
-                        <StyledTooltip
-                          type="hint"
-                          title={question.hint}
-                        >
-                          <FaLightbulb size={40} />
-                        </StyledTooltip>
-                      </HintButton>
-                    )}
                     <p style={{ whiteSpace: 'pre-line' }}>
                       {`${question.questionid}- ${question.title} `}
                       {/*question.QuestionTitle.replaceAll('<br/>', '\n')*/}
@@ -576,8 +584,13 @@ const Questionary: React.FC = () => {
               </QuestionOverlay>
             </QuestionContainer>
             <ButtonsDiv>
-              <SkipButton/>
-              <TipButton/>
+              <SkipButton onClick={handlePassQuestion}/>
+              {/*question.hint !== ' ' && !passing && (
+                      
+                    )*/}
+              <HintButton onClick={handleShowHint}>
+                          <TipButton/>
+                      </HintButton>
             </ButtonsDiv>
           </FirstRowContainer>
         )}
