@@ -72,7 +72,7 @@ const Ranking: React.FC<RankingProps> = ({ children, content }) => {
                // <strong>Finalizado</strong>
              // </QuestionPoints>
              //</Body> <p>{`180 pts`}</p>
-            //</Content></Item>
+            //</Content></Item>///
           }
         </Body>
       </Content>
