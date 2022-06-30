@@ -70,7 +70,11 @@ interface Question {
 }
 
 interface nextquestion {
-  nextquestion: Question;
+  nextQuestion: Question;
+}
+
+interface hint {
+  hint: string;
 }
 
 interface AnswerQuestion {
@@ -94,6 +98,7 @@ const Questionary: React.FC = () => {
 
   const [passing, setIsPassing] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [confirmTip, setConfirmTip] = useState(false);
   const [answering, setIsAnswering] = useState(false);
   const [reportError, setReportError] = useState(false);
 
@@ -257,6 +262,14 @@ const Questionary: React.FC = () => {
                 type: 'success',
               });
             }
+            if (e.data === 'updatecurrentquestionhint') {
+              getCurrentQuestionByTeamId();
+                addToast({
+                  title: 'Dica',
+                  description: question.hint,
+                  type: 'success',
+                });
+            }
             if (e.data.includes('message')) {
               const recievedMessage: Message = JSON.parse(e.data);
               addMessage(recievedMessage.message, recievedMessage.userName);
@@ -268,6 +281,7 @@ const Questionary: React.FC = () => {
             if (e.data === 'updatecurrentquestionpassed') {
               getRanking();
               getCurrentQuestionByTeamId();
+              console.log("ta pulano memo");
               addToast({
                 title: 'Alerta',
                 description: 'Sua equipe pulou a questão',
@@ -307,13 +321,41 @@ const Questionary: React.FC = () => {
     verifyPing,
   ]);
 
+  const handleShowConfirmTip = useCallback(() => {
+    setConfirmTip(true);
+  }, [confirmTip]);
+
   const handleShowHint = useCallback(() => {
-    addToast({
-      title: 'Dica',
-      description: question.hint,
-      type: 'success',
-    });
-  }, [addToast, question.hint]);
+    setConfirmTip(!confirmTip);
+    Axios.get<hint>(
+      `${ENDPOINT}/question/official/hint?questionid=${question.questionid}&teamid=${user.teamid}&userid=${user.userid}`,
+    ).then((response) => {
+      getCurrentQuestionByTeamId();
+      sWs.current?.send(
+        JSON.stringify({
+          action: 'onMessage',
+          type: 'updatecurrentquestionhint',
+          userid: user.userid,
+          teamid: user.teamid,
+          teamcategory: team.category
+        }),
+      );
+      sWs.current?.send(
+        JSON.stringify({
+          action: 'onMessage',
+          type: 'refreshranking',
+        }),
+      );
+      addToast({
+        title: 'Dica',
+        description: question.hint,
+        type: 'success',
+      });})
+  }, [addToast, question.hint, confirmTip]);
+
+  const handleShowConfirm = useCallback(() => {
+    setConfirm(true);
+  }, [confirm]);
 
   const handlePassQuestion = useCallback(() => {
     setConfirm(!confirm);
@@ -323,16 +365,18 @@ const Questionary: React.FC = () => {
       try {
         setCaracterCounter(999);
         setRememberAnswer('');
-        if (response.data.nextquestion.questionid) {
+        if (response.data.nextQuestion.questionid) {
           setIsPassing(false);
           setConfirm(!confirm);
-          setQuestion(response.data.nextquestion);
+          setQuestion(response.data.nextQuestion);
+          console.log("vai pula");
           sWs.current?.send(
             JSON.stringify({
               action: 'onMessage',
               type: 'updatecurrentquestionpassed',
-              userId: user.userid,
-              teamId: user.teamid,
+              userid: user.userid,
+              teamid: user.teamid,
+              teamcategory: team.category
             }),
           );
           sWs.current?.send(
@@ -343,7 +387,8 @@ const Questionary: React.FC = () => {
           );
         }
       } catch {
-        window.location.reload();
+        /*window.location.reload();*/
+        console.log("oia o pulo");
       }
     });
   }, [ENDPOINT, confirm, question.questionid, user.userid, user.teamid]);
@@ -386,6 +431,7 @@ const Questionary: React.FC = () => {
                 type: 'updatecurrentquestion',
                 userid: user.userid,
                 teamid: user.teamid,
+                teamcategory: team.category
               }),
             );
             sWs.current?.send(
@@ -422,10 +468,18 @@ const Questionary: React.FC = () => {
     setConfirm(!confirm);
   }, [confirm]);
 
+    const handleConfirmTip = useCallback(() => {
+    setConfirmTip(!confirmTip);
+  }, [confirmTip]);
+
   const handleYesButton = useCallback(() => {
     setIsPassing(!passing);
     handlePassQuestion();
   }, [handlePassQuestion, passing]);
+
+  const handleYesButtonTip = useCallback(() => {
+    handleShowHint();
+  }, [handleShowHint]);
 
   const handleCaracterChange = useCallback(
     (e) => {
@@ -460,6 +514,14 @@ const Questionary: React.FC = () => {
           pass={handleYesButton}
         />
       )}
+      {confirmTip && (
+        <Confirm
+          title="Deseja mesmo pedir uma dica? A pontuação da questão cairá pela metade"
+          closeFunc={handleConfirmTip}
+          show={confirmTip}
+          pass={handleYesButtonTip}
+        />
+      )}
       <Header>
         <LogoutButton onClick={signOut}>
           <FiLogOut size={20} />
@@ -488,8 +550,7 @@ const Questionary: React.FC = () => {
                 <Question>
                   <QuestionHeader normal={question.type === 'normal'}>
                     <p style={{ whiteSpace: 'pre-line' }}>
-                      {`${question.questionid}- ${question.title} `}
-                      {/*question.QuestionTitle.replaceAll('<br/>', '\n')*/}
+                      {`${question.questionid} - ${question.title.replaceAll('<br/>', '\n')}`}
                     </p>
                     {/*question.title !== '' && !passing ? (
                       <>
@@ -584,11 +645,11 @@ const Questionary: React.FC = () => {
               </QuestionOverlay>
             </QuestionContainer>
             <ButtonsDiv>
-              <SkipButton onClick={handlePassQuestion}/>
+              <SkipButton onClick={handleShowConfirm}/>
               {/*question.hint !== ' ' && !passing && (
                       
                     )*/}
-              <HintButton onClick={handleShowHint}>
+              <HintButton onClick={handleShowConfirmTip}>
                           <TipButton/>
                       </HintButton>
             </ButtonsDiv>

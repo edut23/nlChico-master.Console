@@ -11,6 +11,7 @@ import {
   Body,
   Item,
   QuestionPoints,
+  Icon,
 } from './styles';
 
 interface RankingProps {
@@ -43,16 +44,17 @@ const Ranking: React.FC<RankingProps> = ({ children, content }) => {
     <Container>
       <Content>
         <Header>
+          <Icon/>
           <Title>Ranking</Title>
         </Header>
         <Body>
-          {list.slice(0, 4).map((item, index) => (
+          {list.slice(0, 6).map((item, index) => (
             <Item
               myTeam={user.teamid === item.teamid && true}
               key={item.teamid}
             >
               <QuestionPoints>
-                <h3>{`${index + 1}° - ${item.name}`}</h3>
+                <h3>{`${index + 1}° ${item.name}`}</h3>
                 {item.currentquestionid === '111' && (
                   <strong>Finalizado</strong>
                 )}

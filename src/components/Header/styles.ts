@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 export const Container = styled.header`
-  z-index: 999;
+  z-index: 50;
   width: 59%;
   height: 6vh;
 

@@ -221,7 +221,7 @@ export const Answer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2%;
+  margin-bottom: 3%;
 
   @media (max-width: 700px) {
     width: 100%;
@@ -237,10 +237,10 @@ export const FormContent = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-left: 23%;
+  padding-left: 28%;
   padding-right: 10%;
   z-index: 10;
-  width: 90%;
+  width: 85%;
   heigth: 65%;
 
   @media (max-width: 930px) {
@@ -264,7 +264,7 @@ export const ReportErrorButton = styled.div`
   height: 46px;
   margin-right: 7%;
   margin-left: 43%;
-  padding: 40px 33px;
+  padding: 20px 33px;
 
   //transition: color 0.4s;
 
@@ -348,7 +348,7 @@ export const Hint = styled.p`
   margin-right: 1em;
   //margin-top: 8px;
 
-  width: 280px;
+  width: 330px;
   background: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
 
@@ -388,8 +388,8 @@ export const RankContainer = styled.div`
 
   //width: 60%;
   //heigth: 65%;
-  margin-left: -10%;
-  margin-right: 10%;
+  margin-left: -31%;
+  margin-right: -3%;
 
 `;
 

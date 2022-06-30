@@ -1,5 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { shade } from 'polished';
+import confirm from '../../assets/img/confirm.png';
 
 import Button from '../Button';
 
@@ -37,8 +38,9 @@ export const Container = styled.div<AlertProps>`
   right: 0;
   bottom: 0;
 
-  z-index: 10000;
   background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+
 
   font-family: 'Poppins';
 `;
@@ -47,8 +49,14 @@ export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url(${confirm});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 50%;
+  z-index: 10000;
+  margin-top: 3%;
 
-  height: 100vh;
+  height: 680px;
 `;
 
 export const AlertContainer = styled.div`
@@ -61,12 +69,10 @@ export const AlertContainer = styled.div`
   height: auto;
 
   padding: 32px;
+  
 
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.9);
+  
   z-index: 100000;
-
-  box-shadow: inset 0 0 10px #000;
 `;
 
 export const AlertHeader = styled.div`
@@ -74,14 +80,15 @@ export const AlertHeader = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 100%;
+  width: 67%;
+  margin-top: -25%;
 
   margin-bottom: auto;
 `;
 
 export const Title = styled.h1`
-  font-size: 36px;
-  color: #c53030;
+  font-size: 20px;
+  color: #61393A;
   text-align: center;
 `;
 
@@ -97,6 +104,8 @@ export const Description = styled.div`
 
 export const StyledButton = styled(Button) <CustomButtonProps>`
   width: 120px;
+  height: 40px;
+  border-radius: 210px;
 
   ${(props) =>
     props.bg
@@ -104,9 +113,9 @@ export const StyledButton = styled(Button) <CustomButtonProps>`
           background: ${props.bg};
         `
       : css`
-          background: #c53030;
+          background: #0094FF;
           &:hover {
-            background: ${shade('0.4', '#c53030')};
+            background: ${shade('0.4', '#0094FF')};
           }
         `}
 `;

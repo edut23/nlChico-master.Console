@@ -1,5 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { shade } from 'polished';
+import confirm from '../../assets/img/confirm.png';
 
 import Button from '../Button';
 
@@ -46,7 +47,7 @@ export const Container = styled.div<AlertProps>`
   bottom: 0;
 
   z-index: 10000;
-  background: rgba(0, 0, 0, 0.7);
+  background-image: url(${confirm});
 
   font-family: 'Poppins';
 `;

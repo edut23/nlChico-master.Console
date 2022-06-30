@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { EarnPoints } from './animations';
+import iconranking from '../../assets/img/iconeranking.svg';
 
 interface ItemProps {
   myTeam: boolean;
@@ -37,19 +38,38 @@ export const Content = styled.div`
 export const Header = styled.div`
   width: 25%;
   margin-top: 2%;
-  margin-left: 13%;
+  margin-left: 11%;
+  color: #E10051;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: row;
 
   border-radius: 12px;
 `;
+
+export const Icon = styled.div`
+  background-image: url(${iconranking});
+  display: flex;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  margin-right: 3%;
+
+  width: 20px;
+  height: 20px;
+`
 
 export const Title = styled.h1`
   font-family: 'Kumbh Sans';
   font-weight: 600;
   font-size: 20px;
+  
 
   @media (max-width: 700px) {
     font-size: 12px;
@@ -91,9 +111,15 @@ export const Item = styled.div<ItemProps>`
     height: 50px;
   }
 
+  strong {
+    color: #999999;
+    font-size: 10px;
+  }
+
   h3 {
     margin-right: auto;
-    font-size: 17px;
+    font-size: 13px;
+    color: #FFFFFF;
 
     ${(props) =>
     props.myTeam &&
@@ -155,13 +181,13 @@ export const QuestionPoints = styled.div`
   width: 80%;
 
   strong {
-    font-size: 14px;
+    font-size: 11px;
     width: 100%;
   }
 
   @media (max-width: 1100px) {
     h3 {
-      font-size: 14px;
+      font-size: 10px;
 
       width: 70%;
       overflow: hidden;
@@ -172,7 +198,7 @@ export const QuestionPoints = styled.div`
     }
 
     strong {
-      font-size: 12px;
+      font-size: 10px;
     }
   }
 `;

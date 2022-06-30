@@ -40,9 +40,6 @@ const Confirm: React.FC<ConfirmProps> = ({
             <Title>
               <p>{title}</p>
             </Title>
-            <CloseButton onClick={closeFunc}>
-              <FiXCircle size={40} />
-            </CloseButton>
           </AlertHeader>
 
           <Description>

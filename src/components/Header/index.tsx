@@ -62,6 +62,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="user-data-container">
               <h3>{user.nickname}</h3>
             </div>
+          <Link to = "/main"><HomeOption tab={selectedTab}>Home</HomeOption></Link>
           <Link to = "/"><HomeOption tab={selectedTab} onClick = {signOut}>Sair</HomeOption></Link>
           </UserContainer>
           </div>}
@@ -89,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({
               </Link>
             </>
           )}
-          {children}
+          {/*children*/}
         </LogoOptions>
       </LogoContent>
       <Logo src={chicoLogo} alt="chicologo" onClick={logoClick} style={{zIndex: 100}}></Logo>
