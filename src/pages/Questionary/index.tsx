@@ -48,7 +48,8 @@ import {
   SideContainer,
   ButtonsDiv,
   TipButton,
-  SkipButton
+  SkipButton,
+  NumberQuestion
 } from './styles';
 
 import Header from '../../components/Header';
@@ -219,8 +220,16 @@ const Questionary: React.FC = () => {
         parseInt(response.data.answercharactercounter, 10),
       );
       console.log("puxo3");
+      if(response.data.hint != " ") {
+        addToast({
+          title: 'Dica',
+          description: response.data.hint,
+          type: 'success',
+        })
+      };
+      
     });
-  }, [ENDPOINT, push, user.userid, user.teamid]);
+  }, [ENDPOINT, push, user.userid, user.teamid, question.hint, addToast]);
 
   useEffect(() => {
     sWs.current = new WebSocket(ENDPOINT_WS);
@@ -256,11 +265,17 @@ const Questionary: React.FC = () => {
             if (e.data === 'updatecurrentquestion') {
               getRanking();
               getCurrentQuestionByTeamId();
-              addToast({
+              /*if(question.hint != " ") {
+                addToast({
+                  title: 'Dica',
+                  description: question.hint,
+                  type: 'success',
+                });}*/
+              /*addToast({
                 title: 'Boa!',
                 description: 'Sua equipe acertou a resposta',
                 type: 'success',
-              });
+              });*/
             }
             if (e.data === 'updatecurrentquestionhint') {
               getCurrentQuestionByTeamId();
@@ -282,12 +297,13 @@ const Questionary: React.FC = () => {
               getRanking();
               getCurrentQuestionByTeamId();
               console.log("ta pulano memo");
-              addToast({
+              /*addToast({
                 title: 'Alerta',
                 description: 'Sua equipe pulou a questão',
                 type: 'info',
-              });
+              });*/
             }
+            
           } catch {
             window.location.reload();
             console.log('err');
@@ -295,8 +311,10 @@ const Questionary: React.FC = () => {
         };
       }
     };
-
     getCurrentQuestionByTeamId();
+
+
+    
     console.log("puxo6");
 
     return () => {
@@ -317,20 +335,26 @@ const Questionary: React.FC = () => {
     team.currentquestionid,
     user.userid,
     user.teamid,
+    question.hint,
     validatePong,
     verifyPing,
   ]);
 
   const handleShowConfirmTip = useCallback(() => {
-    setConfirmTip(true);
-  }, [confirmTip]);
+    if(question.hint != " "){
+      setConfirmTip(false);
+       handleShowHint();
+       }
+       else if (question.hint == " "){
+        setConfirmTip(true);
+       }
+  }, [confirmTip, question.hint, setConfirmTip]);
 
   const handleShowHint = useCallback(() => {
-    setConfirmTip(!confirmTip);
+    setConfirmTip(false);
     Axios.get<hint>(
       `${ENDPOINT}/question/official/hint?questionid=${question.questionid}&teamid=${user.teamid}&userid=${user.userid}`,
     ).then((response) => {
-      getCurrentQuestionByTeamId();
       sWs.current?.send(
         JSON.stringify({
           action: 'onMessage',
@@ -346,11 +370,8 @@ const Questionary: React.FC = () => {
           type: 'refreshranking',
         }),
       );
-      addToast({
-        title: 'Dica',
-        description: question.hint,
-        type: 'success',
-      });})
+      ;})
+      //getCurrentQuestionByTeamId();
   }, [addToast, question.hint, confirmTip]);
 
   const handleShowConfirm = useCallback(() => {
@@ -469,7 +490,7 @@ const Questionary: React.FC = () => {
   }, [confirm]);
 
     const handleConfirmTip = useCallback(() => {
-    setConfirmTip(!confirmTip);
+     setConfirmTip(!confirmTip);
   }, [confirmTip]);
 
   const handleYesButton = useCallback(() => {
@@ -549,10 +570,13 @@ const Questionary: React.FC = () => {
               <QuestionOverlay>
                 <Question>
                   <QuestionHeader normal={question.type === 'normal'}>
+                    <NumberQuestion>
+                    <h1 style={{ color: '#FFFFFF' }}>{`${question.questionid}`}</h1>
+                    </NumberQuestion>
                     <p style={{ whiteSpace: 'pre-line' }}>
-                      {`${question.questionid} - ${question.title.replaceAll('<br/>', '\n')}`}
+                      {`${question.title.replaceAll('<br/>', '\n')}`}
                     </p>
-                    {/*question.title !== '' && !passing ? (
+                    {/*question.title !== '' && !passing ? ( ; align-items: 'center'; justify-content: 'center'
                       <>
                         <PassButton onClick={handleConfirm}>
                           <StyledTooltip title="Atenção: Ao pular a questão não tem mais como voltar !">
@@ -643,8 +667,7 @@ const Questionary: React.FC = () => {
                     <ReactLoading color="#000" type="balls" />
                   )}
               </QuestionOverlay>
-            </QuestionContainer>
-            <ButtonsDiv>
+              <ButtonsDiv>
               <SkipButton onClick={handleShowConfirm}/>
               {/*question.hint !== ' ' && !passing && (
                       
@@ -653,6 +676,7 @@ const Questionary: React.FC = () => {
                           <TipButton/>
                       </HintButton>
             </ButtonsDiv>
+            </QuestionContainer>
           </FirstRowContainer>
         )}
         {question.type === 'final' && (

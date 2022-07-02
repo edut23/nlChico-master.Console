@@ -26,6 +26,7 @@ export const Container = styled.div<AlertProps>`
 
   width: 100vw;
   height: 100vh;
+  z-index: 999999;
 
   ${(props) =>
     props.show &&
