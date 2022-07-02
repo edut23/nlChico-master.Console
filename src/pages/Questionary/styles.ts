@@ -255,7 +255,11 @@ export const Answer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 6vh;
+  margin-bottom: 3.8vh;
+
+  @media (min-height: 1000px) {
+    margin-bottom: 8vh;
+  }
 
   @media (max-width: 700px) {
     width: 100%;
@@ -300,6 +304,11 @@ export const ReportErrorButton = styled.div`
   margin-left: 43%;
   padding: 20px 33px;
 
+  @media (min-height: 1000px) {
+    margin-top: 1vh;
+    margin-left: 23vw;
+  }
+
   //transition: color 0.4s;
 
 `;
@@ -307,6 +316,11 @@ export const ReportErrorButton = styled.div`
 export const ButtonsDiv = styled.div`
 @media (min-height: 650px) {
   margin-right: -35vw;
+  margin-top: 21vh;
+  position: absolute;
+}
+@media (min-height: 1000px) {
+  margin-right: -42vw;
   margin-top: 21vh;
   position: absolute;
 }
@@ -424,9 +438,14 @@ export const RankContainer = styled.div`
 
   //width: 60%;
   //heigth: 65%;
+  
   margin-left: -31%;
   margin-right: -3%;
 
+  @media (min-height: 1000px) {
+    margin-left: -57%;
+    margin-right: -15%;
+  }
 `;
 
 export const SideContainer = styled.div`

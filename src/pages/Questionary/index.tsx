@@ -102,6 +102,7 @@ const Questionary: React.FC = () => {
   const [confirmTip, setConfirmTip] = useState(false);
   const [answering, setIsAnswering] = useState(false);
   const [reportError, setReportError] = useState(false);
+  const [refreshTip, setRefreshTip] = useState(true);
 
   const [wsResponse, setWsResponse] = useState('');
 
@@ -169,7 +170,7 @@ const Questionary: React.FC = () => {
         teamid: user.teamid,
       }),
     );
-  }, [user.userid, user.teamid]);
+  }, [user.userid, user.teamid, question.hint]);
 
   const reOpenConnection = useCallback(() => {
     console.log('reabriu a conexao');
@@ -220,13 +221,22 @@ const Questionary: React.FC = () => {
         parseInt(response.data.answercharactercounter, 10),
       );
       console.log("puxo3");
-      if(response.data.hint != " ") {
+      /*if(response.data.hint !== " " && refreshTip) {
+        addToast({
+          title: 'Dica',
+          description: response.data.hint,
+          type: 'success',
+        });
+        setRefreshTip(!refreshTip);
+        console.log(refreshTip);
+      }
+      /*if(response.data.hint !== " ") {
         addToast({
           title: 'Dica',
           description: response.data.hint,
           type: 'success',
         })
-      };
+      };*/
       
     });
   }, [ENDPOINT, push, user.userid, user.teamid, question.hint, addToast]);
@@ -236,6 +246,13 @@ const Questionary: React.FC = () => {
     sWs.current.onopen = (event) => {
       sendId();
       console.log("puxo4");
+      if(question.hint !== " ") {
+        addToast({
+          title: 'Dica',
+          description: question.hint,
+          type: 'success',
+        })
+      };
       setInterval(() => {
         if (sWs !== undefined) {
           ping();
@@ -265,12 +282,14 @@ const Questionary: React.FC = () => {
             if (e.data === 'updatecurrentquestion') {
               getRanking();
               getCurrentQuestionByTeamId();
-              /*if(question.hint != " ") {
+              /*if(question.hint !== " " && refreshTip) {
                 addToast({
                   title: 'Dica',
                   description: question.hint,
                   type: 'success',
-                });}*/
+                });
+                setRefreshTip(false);
+              }
               /*addToast({
                 title: 'Boa!',
                 description: 'Sua equipe acertou a resposta',
@@ -297,11 +316,11 @@ const Questionary: React.FC = () => {
               getRanking();
               getCurrentQuestionByTeamId();
               console.log("ta pulano memo");
-              /*addToast({
+              addToast({
                 title: 'Alerta',
                 description: 'Sua equipe pulou a questão',
                 type: 'info',
-              });*/
+              });
             }
             
           } catch {
@@ -341,11 +360,11 @@ const Questionary: React.FC = () => {
   ]);
 
   const handleShowConfirmTip = useCallback(() => {
-    if(question.hint != " "){
+    if(question.hint !== " "){
       setConfirmTip(false);
        handleShowHint();
        }
-       else if (question.hint == " "){
+       else if (question.hint === " "){
         setConfirmTip(true);
        }
   }, [confirmTip, question.hint, setConfirmTip]);
