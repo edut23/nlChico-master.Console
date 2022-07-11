@@ -44,6 +44,7 @@ const Main: React.FC = () => {
       'https://cdn.raceroster.com/assets/images/team-placeholder.png',
     [],
   );
+  
 
   const handleConfirm = useCallback(() => {
     setConfirmQ(!confirmQ);
