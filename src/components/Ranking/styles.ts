@@ -15,9 +15,12 @@ export const Container = styled.div`
   font-family: 'Poppins';
 
   padding: 8px;
-  overflow: hidden;
+  overflow: hidden scroll;
 
-  overflow: hidden-scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
 
   @media (max-width: 700px) {
     padding: 0px;

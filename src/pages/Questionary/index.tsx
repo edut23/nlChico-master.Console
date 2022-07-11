@@ -444,17 +444,23 @@ const Questionary: React.FC = () => {
         console.log(response.data);
         console.log(response.data.nextQuestion);
         console.log(response.data.nextQuestion.questionid);
-        if (response.data.nextQuestion.questionid == undefined) {
+        /*if (response.data.nextQuestion.questionid == undefined) {
           setIsPassing(false);
           addToast({
             title: 'Calma',
             description: 'Aguarde o tempo limite para pular a questao. (30s)',
             type: 'info',
           });
-        }
+        }*/
       } catch {
         /*window.location.reload();*/
         console.log("oia o pulo");
+        setIsPassing(false);
+          addToast({
+            title: 'Calma',
+            description: 'Aguarde o tempo limite para pular a questao. (30s)',
+            type: 'info',
+          });
       }
     });
   }, [ENDPOINT, confirm, question.questionid, user.userid, user.teamid]);
