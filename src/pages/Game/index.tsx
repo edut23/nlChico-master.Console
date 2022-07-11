@@ -23,7 +23,8 @@ import {
   StyledInput,
   LContainer,
   ButtonsContainer,
-  FormHeader
+  FormHeader,
+  Margin
 } from './styles';
 
 import Header from '../../components/Header';
@@ -92,6 +93,7 @@ const Game: React.FC = () => {
       } catch (err) {
         setIsLogging(false);
         setIsEnabled(true);
+        setLoading(false);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
@@ -140,6 +142,7 @@ const Game: React.FC = () => {
           {!user &&<PageWrapper>
               <CircleContent>
                 <FormContainer>
+                  <Margin>
                   <Form ref={formRef} onSubmit={handleSubmit}>
                     <FormHeader>Divirta-se junto com sua equipe solucionando o desafio do colégio objetivo</FormHeader>
                     <StyledInput
@@ -168,6 +171,7 @@ const Game: React.FC = () => {
                       </StyledButton>
                     </ButtonsContainer>
                   </Form>
+                  </Margin>
                 </FormContainer>
                 <Countdown background={false} to={countDownDate} />
               </CircleContent>

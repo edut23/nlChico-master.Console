@@ -102,7 +102,8 @@ const Questionary: React.FC = () => {
   const [confirmTip, setConfirmTip] = useState(false);
   const [answering, setIsAnswering] = useState(false);
   const [reportError, setReportError] = useState(false);
-  const [refreshTip, setRefreshTip] = useState(true);
+  const [qId, setQId] = useState('');
+  const [passToast, setPassToast] = useState('');
 
   const [wsResponse, setWsResponse] = useState('');
 
@@ -214,6 +215,9 @@ const Questionary: React.FC = () => {
       console.log("puxo");
 
       setQuestion(response.data);
+      console.log(response.data);
+      setQId(response.data.questionid);
+
 
       console.log("puxo2");
 
@@ -239,14 +243,14 @@ const Questionary: React.FC = () => {
       };*/
       
     });
-  }, [ENDPOINT, push, user.userid, user.teamid, question.hint, addToast]);
+  }, [ENDPOINT, push, user.userid, user.teamid, question.hint, addToast, setQId]);
 
   useEffect(() => {
     sWs.current = new WebSocket(ENDPOINT_WS);
     sWs.current.onopen = (event) => {
       sendId();
       console.log("puxo4");
-      if(question.hint !== " ") {
+      if(question.hint !== " " && question.hint !== "") {
         addToast({
           title: 'Dica',
           description: question.hint,
@@ -289,12 +293,12 @@ const Questionary: React.FC = () => {
                   type: 'success',
                 });
                 setRefreshTip(false);
-              }
-              /*addToast({
+              }*/
+              addToast({
                 title: 'Boa!',
                 description: 'Sua equipe acertou a resposta',
                 type: 'success',
-              });*/
+              });
             }
             if (e.data === 'updatecurrentquestionhint') {
               getCurrentQuestionByTeamId();
@@ -371,9 +375,20 @@ const Questionary: React.FC = () => {
 
   const handleShowHint = useCallback(() => {
     setConfirmTip(false);
+    console.log(qId);
+    console.log(question.hint);
+
     Axios.get<hint>(
       `${ENDPOINT}/question/official/hint?questionid=${question.questionid}&teamid=${user.teamid}&userid=${user.userid}`,
     ).then((response) => {
+      if(question.hint == ''){
+        addToast({
+          title: 'Alerta',
+          description: 'Essa questão não possui nenhuma dica disponível.',
+          type: 'info',
+        });
+      };
+      console.log(response.data);
       sWs.current?.send(
         JSON.stringify({
           action: 'onMessage',
@@ -391,7 +406,7 @@ const Questionary: React.FC = () => {
       );
       ;})
       //getCurrentQuestionByTeamId();
-  }, [addToast, question.hint, confirmTip]);
+  }, [addToast, question.hint, confirmTip, qId]);
 
   const handleShowConfirm = useCallback(() => {
     setConfirm(true);
@@ -425,6 +440,17 @@ const Questionary: React.FC = () => {
               type: 'refreshranking',
             }),
           );
+        }
+        console.log(response.data);
+        console.log(response.data.nextQuestion);
+        console.log(response.data.nextQuestion.questionid);
+        if (response.data.nextQuestion.questionid == undefined) {
+          setIsPassing(false);
+          addToast({
+            title: 'Calma',
+            description: 'Aguarde o tempo limite para pular a questao. (30s)',
+            type: 'info',
+          });
         }
       } catch {
         /*window.location.reload();*/
@@ -460,6 +486,11 @@ const Questionary: React.FC = () => {
             setCaracterCounter(999);
             setRememberAnswer('');
             console.log(response.data);
+            addToast({
+              title: 'Boa!',
+              description: 'Sua equipe acertou a resposta',
+              type: 'success',
+            });
 
             formRef.current?.clearField('answer');
             setQuestion(response.data.nextquestion);

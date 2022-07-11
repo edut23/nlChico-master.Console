@@ -15,6 +15,7 @@ export const Container = styled.div`
   font-family: 'Poppins';
 
   padding: 8px;
+  overflow: hidden;
 
   overflow: hidden-scroll;
 
@@ -76,6 +77,11 @@ export const Title = styled.h1`
   }
 `;
 
+export const Row = styled.div`
+  flex-direction: row;
+  display: flex;
+`;
+
 export const Body = styled.div`
   width: 20%;
   max-height: 30px;
@@ -86,12 +92,14 @@ export const Body = styled.div`
   //border-radius: 12px;
 
   padding: 8px;
+
 `;
 
 export const Item = styled.div<ItemProps>`
   width: 100%;
   height: 12%;
   margin-left: 13%;
+  margin-bottom: 1.3%;
 
   display: flex;
   align-items: center;
@@ -106,6 +114,7 @@ export const Item = styled.div<ItemProps>`
 
   border-radius: 12px;
 
+
   img {
     width: 50px;
     height: 50px;
@@ -117,9 +126,29 @@ export const Item = styled.div<ItemProps>`
   }
 
   h3 {
+    padding-left: 4px;
+    font-size: 13px;
+    color: #FFFFFF;
+    background: rgb(225, 0, 81);
+    border-radius: 210px;
+    width: 20px !important;
+
+    ${(props) =>
+    props.myTeam &&
+    css`
+        width: 20px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      `}
+  }
+  h4 {
     margin-right: auto;
     font-size: 13px;
     color: #FFFFFF;
+    padding-left: 4px;
+    display: contents;
+    text-overflow: ellipsis;
 
     ${(props) =>
     props.myTeam &&

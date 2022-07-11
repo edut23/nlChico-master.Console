@@ -68,13 +68,12 @@ export const FormContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  height: 80%;
+  height: 95%;
 
   background-image: url(${FormBackground});
   background-repeat: no-repeat;
-  background-size: 100%;
-  background-position-x: center;
-  background-position-y: center;
+  background-size: contain;
+  background-position: 50%, 50%;
   text-align: center;
   padding: 0px 55px;
 
@@ -90,6 +89,10 @@ export const FormContainer = styled.div`
     }
   }
 `;
+
+export const Margin = styled.div`
+  margin-left: 5%
+`
 
 export const Content = styled.p`
   width: 440px;
@@ -204,9 +207,9 @@ export const LContainer = styled.div`
   position: absolute;
   align-itens: center;
   align: center;
-  justify-content: left;
+  justify-content: center;
 
-  margin-left: 22em;
-  margin-top: 2em;
+  margin-left: 20vw;
+  margin-top: 0vh;
 `;
 

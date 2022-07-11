@@ -107,9 +107,9 @@ const Alert: React.FC<AlertProps> = ({
                 </AlertHeader>
 
                 <Description>
-                  <Form ref={formRef} onSubmit={handleSubmit}>
+                  <Form ref={formRef} onSubmit={handleSubmit} style={{width: `100%`, height: `100%`}}>
                     {type !== 'confirm' && (
-                      <Textarea placeholder={placeholder} name="error"></Textarea>
+                      <Textarea placeholder={''} name="error" ></Textarea>
                     )}
                     <StyledButton type="submit">{buttonTitle}</StyledButton>
                   </Form>

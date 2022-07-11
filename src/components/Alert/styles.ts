@@ -1,6 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { shade } from 'polished';
-import confirm from '../../assets/img/confirm.png';
+import report from '../../assets/img/erroReport.png';
 
 import Button from '../Button';
 
@@ -31,6 +31,7 @@ export const Container = styled.div<AlertProps>`
 
   width: 100vw;
   height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
 
   ${(props) =>
     props.show
@@ -47,7 +48,6 @@ export const Container = styled.div<AlertProps>`
   bottom: 0;
 
   z-index: 10000;
-  background-image: url(${confirm});
 
   font-family: 'Poppins';
 `;
@@ -56,8 +56,13 @@ export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url(${report});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 50%;
 
-  height: 100vh;
+  height: 80vh;
+  margin-top: 10vh;
 `;
 
 export const AlertContainer = styled.div`
@@ -66,16 +71,12 @@ export const AlertContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 600px;
-  height: 400px;
+  width: 50vw;
+  height: 58vh;
 
   padding: 32px;
 
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.9);
   z-index: 100000;
-
-  box-shadow: inset 0 0 10px #000;
 `;
 
 export const AlertHeader = styled.div`
@@ -84,19 +85,19 @@ export const AlertHeader = styled.div`
   justify-content: center;
 
   width: 100%;
+  margin-top: -20%;
 
-  margin-bottom: auto;
 `;
 
 export const Title = styled.h1`
-  font-size: 36px;
+  font-size: 25px;
   color: #c53030;
 
-  margin-left: 28%;
+  margin-left: 29%;
 `;
 
 export const Description = styled.div`
-  margin-top: auto;
+
 `;
 
 export const StyledButton = styled(Button)`
@@ -109,6 +110,9 @@ export const StyledButton = styled(Button)`
 
 export const CloseButton = styled.div`
   margin-left: auto;
+  background: white;
+  height: 40px;
+  border-radius: 20px;
 
   svg {
     color: #c53030;

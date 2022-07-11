@@ -22,8 +22,10 @@ import {
 import Axios from 'axios';
 import { FiCheck, FiDollarSign, FiUserPlus, FiX } from 'react-icons/fi';
 import Header from '../../components/Header';
+import Confirm from '../../components/Confirm';
 import { Form } from '@unform/web';
 import { ChallengeText } from '../Landing/styles';
+import { FaWindows } from 'react-icons/fa';
 
 const Main: React.FC = () => {
 
@@ -33,6 +35,7 @@ const Main: React.FC = () => {
   const [paymentStatus, setPaymentStatus] = useState('');
   const [pendentes, setPendentes] = useState<any[]>([]);
   const [isLogging, setIsLogging] = useState(true);
+  const [confirmQ, setConfirmQ] = useState(false);
 
   const iconStyle = {marginLeft: "-10px", marginRight: "10px"} as React.CSSProperties;
 
@@ -41,6 +44,14 @@ const Main: React.FC = () => {
       'https://cdn.raceroster.com/assets/images/team-placeholder.png',
     [],
   );
+
+  const handleConfirm = useCallback(() => {
+    setConfirmQ(!confirmQ);
+  }, [confirmQ]);
+
+  const handleYesButton = useCallback(() => {
+    window.location.href = '/questionary';
+  },[window.location.href]);
   
   const carrega = useCallback(async () => {
     setIsLogging(true);
@@ -81,6 +92,14 @@ const Main: React.FC = () => {
 
   return (
     <PageGame>
+      {confirmQ && (
+        <Confirm
+          title="Você está prestes a entrar no questionário oficial. Deseja continuar?"
+          closeFunc={handleConfirm}
+          show={confirmQ}
+          pass={handleYesButton}
+        />
+      )}
       <Header />
       <script src="//code.jivosite.com/widget/AIh2Mhazzn" async />
       {user &&<TContainer>
@@ -118,9 +137,7 @@ const Main: React.FC = () => {
                 )}
                 {!isLogging && paymentStatus === 'PAID' && (
                   <div>
-                <Link to="/questionary">
-                  <StyledButton enabled> Responder Quiz Oficial </StyledButton>
-                </Link>
+                  <StyledButton enabled onClick={handleConfirm}> Responder Quiz Oficial </StyledButton>
                   <StyledButton enabled={false}> <FiCheck style={iconStyle}/>Inscrição Paga</StyledButton>
                   </div>
                 )}

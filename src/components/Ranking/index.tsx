@@ -12,6 +12,7 @@ import {
   Item,
   QuestionPoints,
   Icon,
+  Row,
 } from './styles';
 
 interface RankingProps {
@@ -48,13 +49,15 @@ const Ranking: React.FC<RankingProps> = ({ children, content }) => {
           <Title>Ranking</Title>
         </Header>
         <Body>
-          {list.slice(0, 6).map((item, index) => (
+          {list.map((item, index) => (
             <Item
               myTeam={user.teamid === item.teamid && true}
               key={item.teamid}
             >
               <QuestionPoints>
-                <h3>{`${index + 1}° ${item.name}`}</h3>
+                {user.teamid !== item.teamid && (
+                <h4>{`${index + 1}° ${item.name}`}</h4>)}
+                <Row>{user.teamid === item.teamid && (<><h3>{`${index + 1}° `}</h3><h4>{`${item.name}`}</h4></>)}</Row>
                 {item.currentquestionid === '111' && (
                   <strong>Finalizado</strong>
                 )}
@@ -62,20 +65,11 @@ const Ranking: React.FC<RankingProps> = ({ children, content }) => {
                   <strong>{`Questão ${item.currentquestionid}`}</strong>
                 )}
               </QuestionPoints>
-              {user.teamid === item.teamid && (
+              {/*user.teamid === item.teamid && (
                 <p>{`${item.points} pts`}</p>
-              )}
+              )*/}
             </Item>
               ))}
-            {//*<Item myTeam={/*user.teamid === item.TeamName && true*///true}
-              //key={/*item.TeamName*/ "foi"}>
-              //<QuestionPoints>
-                //<h3>1º - Equipe Teste</h3>
-               // <strong>Finalizado</strong>
-             // </QuestionPoints>
-             //</Body> <p>{`180 pts`}</p>
-            //</Content></Item>///
-          }
         </Body>
       </Content>
     </Container>
